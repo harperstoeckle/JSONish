@@ -1,4 +1,4 @@
 // Just ensure this compiles
-#include "jsh/tree/tree.hpp"
+#include "jsh/tree.hpp"
 
 #include <catch2/catch.hpp>
