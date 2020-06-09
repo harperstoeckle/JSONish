@@ -1,6 +1,7 @@
 add_executable(jsonish-tests
 	main.test.cpp
-	lex.test.cpp)
+	lex.test.cpp
+	parse.test.cpp)
 
 target_link_libraries(jsonish-tests
 	PRIVATE
@@ -8,7 +9,7 @@ target_link_libraries(jsonish-tests
 
 target_include_directories(jsonish-tests
 	PRIVATE
-	${PROJECT_SOURCE_DIR}/src)
+	${JSONISH_SRC_DIR})
 
 find_package(Catch2)
 target_link_libraries(jsonish-tests
