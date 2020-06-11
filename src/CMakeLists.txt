@@ -1,6 +1,8 @@
 add_library(jsonish
 	jsh/lex.cpp jsh/lex.hpp
-	${JSONISH_INCLUDE_DIR}/jsh/tree.hpp)
+	${JSONISH_INCLUDE_DIR}/jsh/tree.hpp
+	${JSONISH_INCLUDE_DIR}/jsh/result.hpp
+	jsh/parse.cpp ${JSONISH_INCLUDE_DIR}/jsh/parse.hpp)
 
 set_target_properties(jsonish
 	PROPERTIES
