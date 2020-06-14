@@ -121,6 +121,12 @@ public:
 		return *std::move(value_);
 	}
 
+	[[nodiscard]]
+	SourcePosition position(void) const noexcept
+	{
+		return pos_;
+	}
+
 private:
 	// Construct a token with no stored value.
 	Token(SourcePosition pos, TokenType type) noexcept :
