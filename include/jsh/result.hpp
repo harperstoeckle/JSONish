@@ -128,7 +128,7 @@ private:
 	 */
 	void ensure_has_value(void)
 	{
-		if (!is_valid)
+		if (!is_valid())
 		{
 			throw std::runtime_error(
 				"attempted to get value from invalid result");
