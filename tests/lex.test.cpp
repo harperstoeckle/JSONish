@@ -124,4 +124,12 @@ TEST_CASE("Peek tokens", "[lex]")
 	REQUIRE(l1.next_is(jsh::TokenType::eof));
 	REQUIRE(l1.next_is(jsh::TokenType::eof));
 	REQUIRE(l1.next_is(jsh::TokenType::eof));
+
+	jsh::Lexer l2(R"("string")");
+	REQUIRE(!l2.next_is(jsh::TokenType::invalid));
+	REQUIRE(!l2.next_is(jsh::TokenType::lbrace));
+	REQUIRE(!l2.next_is(jsh::TokenType::rbrace));
+	REQUIRE(!l2.next_is(jsh::TokenType::lbracket));
+	REQUIRE(!l2.next_is(jsh::TokenType::rbracket));
+	REQUIRE(!l2.next_is(jsh::TokenType::eof));
 }
