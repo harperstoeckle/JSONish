@@ -103,7 +103,7 @@ public:
 	}
 
 	[[nodiscard]]
-	bool is_valid(void) noexcept
+	bool is_valid(void) const noexcept
 	{
 		return !std::holds_alternative<ErrorList>(value_);
 	}
@@ -113,7 +113,7 @@ private:
 	 * Called when attampting to forward errors. Throws an exception if
 	 * errors cannot be forwarded.
 	 */
-	void ensure_can_forward_errors(void)
+	void ensure_can_forward_errors(void) const
 	{
 		if (is_valid())
 		{
@@ -126,7 +126,7 @@ private:
 	 * Called when attempting to get a valid value. Throws an exception if
 	 * it cannot be obtained.
 	 */
-	void ensure_has_value(void)
+	void ensure_has_value(void) const
 	{
 		if (!is_valid())
 		{
@@ -139,7 +139,7 @@ private:
 	 * Called when attempting to get errors. Throws an exception if they
 	 * cannot be obtained
 	 */
-	void ensure_has_errors(void)
+	void ensure_has_errors(void) const
 	{
 		if (is_valid)
 		{
