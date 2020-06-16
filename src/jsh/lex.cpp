@@ -48,25 +48,29 @@ bool is_disallowed_in_string(char c) noexcept
 
 Token Lexer::extract_token(void) noexcept
 {
-	extract_leading_whitespace();
-	auto tok_start = source_;
-
-	if (at_end())
+	if (cache_.has_value())
 	{
-		return Token::eof(tok_start);
+		return *std::exchange(cache_, std::nullopt);
 	}
+	return extract_token_from_source();
+}
 
-	switch (extract_char())
+[[nodiscard]]
+bool Lexer::next_is(TokenType type)
+{
+	cache_next_token();
+	assert(cache_.has_value());
+	return cache_->type() == type;
+}
+
+bool Lexer::try_extract_token(TokenType type)
+{
+	if (!next_is(type))
 	{
-	case '"': return extract_string(tok_start);
-	case '{': return Token::lbrace(tok_start);
-	case '}': return Token::rbrace(tok_start);
-	case '[': return Token::lbracket(tok_start);
-	case ']': return Token::rbracket(tok_start);
-	case ',': return Token::comma(tok_start);
-	case ':': return Token::colon(tok_start);
-	default: return Token::invalid(tok_start, "unexpected character");
+		return false;
 	}
+	extract_token();
+	return true;
 }
 
 bool Lexer::at_end(void) const noexcept
@@ -186,6 +190,38 @@ void push_unicode_as_utf8(std::string& str, std::uint16_t code_point)
 	str.push_back(0b11100000 | get_bit_range(code_point, 12, 4));
 	str.push_back(trailing_byte | get_bit_range(code_point, 6, 6));
 	str.push_back(trailing_byte | get_bit_range(code_point, 0, 6));
+}
+
+void Lexer::cache_next_token(void)
+{
+	if (cache_.has_value())
+	{
+		return;
+	}
+	cache_ = extract_token_from_source();
+}
+
+Token Lexer::extract_token_from_source(void)
+{
+	extract_leading_whitespace();
+	auto tok_start = source_;
+
+	if (at_end())
+	{
+		return Token::eof(tok_start);
+	}
+
+	switch (extract_char())
+	{
+	case '"': return extract_string(tok_start);
+	case '{': return Token::lbrace(tok_start);
+	case '}': return Token::rbrace(tok_start);
+	case '[': return Token::lbracket(tok_start);
+	case ']': return Token::rbracket(tok_start);
+	case ',': return Token::comma(tok_start);
+	case ':': return Token::colon(tok_start);
+	default: return Token::invalid(tok_start, "unexpected character");
+	}
 }
 
 Token Lexer::extract_string(SourcePosition tok_start)

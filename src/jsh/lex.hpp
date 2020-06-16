@@ -179,7 +179,7 @@ public:
 	 *
 	 * @return true if the token was extracted and false otherwise
 	 */
-	bool try_extract_token(TokenType type) noexcept;
+	bool try_extract_token(TokenType type);
 
 private:
 	// True iff no more characters can be read, including whitespace.
@@ -192,6 +192,12 @@ private:
 	char peek_char(void) const noexcept;
 
 	char extract_char(void) noexcept;
+
+	// Ensure that the next token is cached.
+	void cache_next_token(void);
+
+	// Extract the next token from the source characters, ignoring `cache_`.
+	Token extract_token_from_source(void);
 
 	/*
 	 * Extract the end of a string after the leading '"'.
