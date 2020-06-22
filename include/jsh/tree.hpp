@@ -115,6 +115,7 @@ public:
 	 * If it does exist, produces an optional containing a
 	 * `std::reference_wrapper` referencing the associated value.
 	 */
+	[[nodiscard]]
 	auto get_value(std::string_view key) const noexcept
 		-> std::optional<std::reference_wrapper<Value const>>
 	{
