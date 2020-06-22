@@ -78,6 +78,12 @@ public:
 	[[nodiscard]]
 	auto end(void) noexcept { return std::end(values_); }
 
+	[[nodiscard]]
+	std::size_t size(void) const noexcept { return values_.size(); }
+
+	[[nodiscard]]
+	bool is_empty(void) const noexcept { return values_.empty(); }
+
 	/** Attempt to insert a key-value pair into the object.
 	 *
 	 * If a value with the given key already exists in this object,
