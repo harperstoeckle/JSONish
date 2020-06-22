@@ -169,7 +169,11 @@ public:
 	Lexer& operator=(Lexer const&) = default;
 
 	/// Remove the next token and return it.
-	Token extract_token(void) noexcept;
+	Token extract_token(void);
+
+	/// Get the next token without removing it.
+	[[nodiscard]]
+	Token peek_token(void);
 
 	/// Indicate whether the next token is of the given type.
 	[[nodiscard]]

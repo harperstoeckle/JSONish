@@ -46,13 +46,20 @@ bool is_disallowed_in_string(char c) noexcept
 	return c < 0x20;
 }
 
-Token Lexer::extract_token(void) noexcept
+Token Lexer::extract_token(void)
 {
 	if (cache_.has_value())
 	{
 		return *std::exchange(cache_, std::nullopt);
 	}
 	return extract_token_from_source();
+}
+
+Token Lexer::peek_token(void)
+{
+	cache_next_token();
+	assert(cache_.has_value());
+	return *cache_;
 }
 
 [[nodiscard]]
