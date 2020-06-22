@@ -8,16 +8,46 @@
 
 namespace jsh
 {
-struct Object;
-struct List;
+class Object;
+class List;
 
 /// Contains either a string, an object, or a list.
 using Value = std::variant<std::string, Object, List>;
 
 /// Contains a sequence of jsonish values.
-struct List
+class List
 {
-	std::vector<Value> values;
+public:
+	List(void) noexcept = default;
+
+	List(List const&) = default;
+	List(List&&) noexcept = default;
+
+	List& operator=(List const&) = default;
+	List& operator=(List&&) noexcept = default;
+
+	[[nodiscard]]
+	auto begin(void) const noexcept { return std::cbegin(values_); }
+	[[nodiscard]]
+	auto end(void) const noexcept { return std::cend(values_); }
+
+	[[nodiscard]]
+	auto begin(void) noexcept { return std::begin(values_); }
+	[[nodiscard]]
+	auto end(void) noexcept { return std::end(values_); }
+
+	/// Append a value to the end of the list.
+	void append(Value const& value) { values_.push_back(value); }
+	void append(Value&& value) { values_.push_back(std::move(value)); }
+
+	[[nodiscard]]
+	std::size_t size(void) const noexcept { return values_.size(); }
+
+	[[nodiscard]]
+	bool is_empty(void) const noexcept { return values_.empty(); }
+
+private:
+	std::vector<Value> values_;
 };
 
 /// Contains key-value pairs of strings and jsonish values.
@@ -32,7 +62,7 @@ struct Object
 	 * One possible way this could be fixed is to wrap the `Value`s in the
 	 * multimap in `std::unique_ptr`.
 	 */
-	std::multimap<std::string, Value> values;
+	std::multimap<std::string, Value> values_;
 };
 } // namespace jsh
 
