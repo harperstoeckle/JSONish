@@ -11,13 +11,15 @@ ErrorList make_errors(std::string reason, Token error_token)
 	auto pos = error_token.position();
 
 	ErrorList errors;
-	errors.emplace_back(std::move(reason), error_token.position());
+	errors.push_back(Error{std::move(reason), error_token.position()});
 
 	if (error_token.type() == TokenType::invalid)
 	{
-		errors.emplace_back(
-			std::move(error_token).text(),
-			error_token.position());
+		errors.push_back(
+			Error{
+				std::move(error_token).text(),
+				error_token.position()
+			});
 	}
 
 	return errors;

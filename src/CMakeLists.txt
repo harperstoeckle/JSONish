@@ -10,7 +10,7 @@ set_target_properties(jsonish
 
 target_compile_features(jsonish
 	PUBLIC
-	cxx_std_20)
+	cxx_std_17)
 
 target_include_directories(jsonish
 	PUBLIC
