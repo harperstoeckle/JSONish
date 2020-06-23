@@ -49,6 +49,10 @@ public:
 	[[nodiscard]]
 	bool is_empty(void) const noexcept { return values_.empty(); }
 
+	/// Get the value at the given index.
+	[[nodiscard]]
+	Value const& at(std::size_t index) const { return values_.at(index); }
+
 	[[nodiscard]] friend
 	bool operator==(List const& a, List const& b);
 
