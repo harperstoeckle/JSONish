@@ -49,6 +49,12 @@ public:
 	[[nodiscard]]
 	bool is_empty(void) const noexcept { return values_.empty(); }
 
+	[[nodiscard]] friend
+	bool operator==(List const& a, List const& b);
+
+	[[nodiscard]] friend
+	bool operator!=(List const& a, List const& b);
+
 private:
 	std::vector<Value> values_;
 };
@@ -133,6 +139,12 @@ public:
 		return value_pos->second;
 	}
 
+	[[nodiscard]] friend
+	bool operator==(Object const& a, Object const& b);
+
+	[[nodiscard]] friend
+	bool operator!=(Object const& a, Object const& b);
+
 private:
 	// Comparator to allow finding elements with `std::string_view`.
 	struct StringViewComparator
@@ -156,6 +168,30 @@ private:
 	 */
 	std::map<std::string, Value, StringViewComparator> values_;
 };
+
+[[nodiscard]] inline
+bool operator==(List const& a, List const& b)
+{
+	return a.values_ == b.values_;
+}
+
+[[nodiscard]] inline
+bool operator!=(List const& a, List const& b)
+{
+	return !(a == b);
+}
+
+[[nodiscard]] inline
+bool operator==(Object const& a, Object const& b)
+{
+	return a.values_ == b.values_;
+}
+
+[[nodiscard]] inline
+bool operator!=(Object const& a, Object const& b)
+{
+	return !(a == b);
+}
 } // namespace jsh
 
 #endif
