@@ -23,6 +23,14 @@ TEST_CASE("Parse jsonish", "[parse]")
 	auto v2 = std::move(r2).value();
 	REQUIRE(std::holds_alternative<jsh::List>(v2));
 	REQUIRE(std::get<jsh::List>(v2).size() == 3);
+	{
+		jsh::List l;
+		l.append("one");
+		l.append("two");
+		l.append("three");
+
+		REQUIRE(std::get<jsh::List>(v2) == l);
+	}
 
 	auto r3 = jsh::parse("{");
 	REQUIRE(!r3.is_valid());
