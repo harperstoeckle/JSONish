@@ -1,11 +1,11 @@
-#include "jsh/lex.hpp"
+#include "jsonish/lex.hpp"
 
 #include <algorithm>
 #include <cassert>
 #include <charconv>
 #include <locale>
 
-namespace jsh
+namespace jsonish
 {
 [[nodiscard]] static constexpr
 bool is_space(char c) noexcept
@@ -305,4 +305,4 @@ Token Lexer::extract_string(SourcePosition tok_start)
 
 	return Token::string(tok_start, text);
 }
-} // namespace jsh
+} // namespace jsonish

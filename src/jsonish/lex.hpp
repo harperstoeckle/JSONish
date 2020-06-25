@@ -6,7 +6,7 @@
 #include <string>
 #include <string_view>
 
-namespace jsh
+namespace jsonish
 {
 enum struct TokenType
 {
@@ -215,6 +215,6 @@ private:
 	// Keeps track of a peeked token
 	std::optional<Token> cache_;
 };
-} // namespace jsh
+} // namespace jsonish
 
 #endif

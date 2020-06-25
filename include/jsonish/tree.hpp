@@ -9,7 +9,7 @@
 #include <variant>
 #include <vector>
 
-namespace jsh
+namespace jsonish
 {
 class Object;
 class List;
@@ -196,6 +196,6 @@ bool operator!=(Object const& a, Object const& b)
 {
 	return !(a == b);
 }
-} // namespace jsh
+} // namespace jsonish
 
 #endif

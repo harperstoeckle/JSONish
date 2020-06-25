@@ -1,13 +1,13 @@
 #ifndef JSH_PARSE_HPP_INCLUDED
 #define JSH_PARSE_HPP_INCLUDED
 
-#include "jsh/result.hpp"
+#include "jsonish/result.hpp"
 
-#include "jsh/tree.hpp"
+#include "jsonish/tree.hpp"
 
 #include <string_view>
 
-namespace jsh
+namespace jsonish
 {
 /** Parses a whole string as jsonish.
  *
@@ -16,10 +16,10 @@ namespace jsh
  * @param str the string to parse
  *
  * @return an invalid result if `str` could not be parsed, or a valid
- * `jsh::Value` otherwise
+ * `jsonish::Value` otherwise
  */
 [[nodiscard]]
 Result<Value> parse(std::string_view str);
-} // namespace jsh
+} // namespace jsonish
 
 #endif

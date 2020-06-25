@@ -1,8 +1,8 @@
-#include "jsh/parse.hpp"
+#include "jsonish/parse.hpp"
 
-#include "jsh/lex.hpp"
+#include "jsonish/lex.hpp"
 
-namespace jsh
+namespace jsonish
 {
 // Make an error list with the given error message along with any lexer errors.
 static
@@ -212,4 +212,4 @@ Result<Value> parse(std::string_view str)
 
 	return value;
 }
-} // namespace jsh
+} // namespace jsonish

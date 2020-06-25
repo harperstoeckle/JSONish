@@ -1,7 +1,7 @@
 #ifndef JSH_RESULT_HPP_INCLUDED
 #define JSH_RESULT_HPP_INCLUDED
 
-#include "jsh/lex.hpp"
+#include "jsonish/lex.hpp"
 
 #include <stdexcept>
 #include <type_traits>
@@ -9,7 +9,7 @@
 #include <variant>
 #include <vector>
 
-namespace jsh
+namespace jsonish
 {
 /// An error encountered during the compilation process
 struct Error
@@ -150,6 +150,6 @@ private:
 
 	std::variant<ValidType, ErrorList> value_;
 };
-} // namespace jsh
+} // namespace jsonish
 
 #endif
