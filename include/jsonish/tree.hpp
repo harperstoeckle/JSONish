@@ -49,7 +49,11 @@ public:
 	[[nodiscard]]
 	bool is_empty(void) const noexcept { return values_.empty(); }
 
-	/// Get the value at the given index.
+	/** Attempt to get the value at the given index.
+	 *
+	 * If the index does not exist, return an empty optional. Otherwise,
+	 * return a `std::reference_wrapper` to the specified value.
+	 */
 	[[nodiscard]]
 	auto at(std::size_t index) const
 		-> std::optional<std::reference_wrapper<Value const>>;
