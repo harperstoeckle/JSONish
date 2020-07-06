@@ -2,7 +2,7 @@
 
 namespace jsonish
 {
-[[nodiscard]] inline
+[[nodiscard]]
 auto List::at(std::size_t index) const
 	-> std::optional<std::reference_wrapper<Value const>>
 {
