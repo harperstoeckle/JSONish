@@ -3,7 +3,7 @@
 namespace jsonish
 {
 [[nodiscard]]
-auto List::at(std::size_t index) const
+auto List::at(std::size_t index) const noexcept
 	-> std::optional<std::reference_wrapper<Value const>>
 {
 	if (index >= values_.size())

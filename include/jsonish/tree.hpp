@@ -55,7 +55,7 @@ public:
 	 * return a `std::reference_wrapper` to the specified value.
 	 */
 	[[nodiscard]]
-	auto at(std::size_t index) const
+	auto at(std::size_t index) const noexcept
 		-> std::optional<std::reference_wrapper<Value const>>;
 
 	[[nodiscard]] friend
