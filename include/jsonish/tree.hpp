@@ -102,14 +102,8 @@ public:
 	 * @return `true` if the key and value were inserted and `false`
 	 * otherwise.
 	 */
-	bool try_insert(std::string key, Value const& value)
-	{
-		return values_.emplace(std::move(key), value).second;
-	}
-	bool try_insert(std::string key, Value&& value)
-	{
-		return values_.emplace(std::move(key), std::move(value)).second;
-	}
+	bool try_insert(std::string key, Value const& value);
+	bool try_insert(std::string key, Value&& value);
 
 	/** Unconditionally set a key and value.
 	 *
@@ -117,14 +111,8 @@ public:
 	 * key does not exist, a new key-value pair is created with `key` and
 	 * `value`.
 	 */
-	void set_value(std::string key, Value const& value)
-	{
-		values_.insert_or_assign(std::move(key), value);
-	}
-	void set_value(std::string key, Value&& value)
-	{
-		values_.insert_or_assign(std::move(key), std::move(value));
-	}
+	void set_value(std::string key, Value const& value);
+	void set_value(std::string key, Value&& value);
 
 	/** Attempt to get the value associated with a key.
 	 *
@@ -134,15 +122,7 @@ public:
 	 */
 	[[nodiscard]]
 	auto get_value(std::string_view key) const noexcept
-		-> std::optional<std::reference_wrapper<Value const>>
-	{
-		auto const value_pos = values_.find(key);
-		if (value_pos == std::cend(values_))
-		{
-			return std::nullopt;
-		}
-		return value_pos->second;
-	}
+		-> std::optional<std::reference_wrapper<Value const>>;
 
 	[[nodiscard]] friend
 	bool operator==(Object const& a, Object const& b);
@@ -173,42 +153,6 @@ private:
 	 */
 	std::map<std::string, Value, StringViewComparator> values_;
 };
-
-[[nodiscard]] inline
-bool operator==(List const& a, List const& b)
-{
-	return a.values_ == b.values_;
-}
-
-[[nodiscard]] inline
-bool operator!=(List const& a, List const& b)
-{
-	return !(a == b);
-}
-
-[[nodiscard]] inline
-bool operator==(Object const& a, Object const& b)
-{
-	return a.values_ == b.values_;
-}
-
-[[nodiscard]] inline
-bool operator!=(Object const& a, Object const& b)
-{
-	return !(a == b);
-}
-
-/// Get the value at the given index.
-[[nodiscard]] inline
-auto List::at(std::size_t index) const
-	-> std::optional<std::reference_wrapper<Value const>>
-{
-	if (index >= values_.size())
-	{
-		return std::nullopt;
-	}
-	return values_[index];
-}
 } // namespace jsonish
 
 #endif
