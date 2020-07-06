@@ -1,7 +1,7 @@
 #ifndef JSH_RESULT_HPP_INCLUDED
 #define JSH_RESULT_HPP_INCLUDED
 
-#include "jsonish/lex.hpp"
+#include "jsonish/source_position.hpp"
 
 #include <stdexcept>
 #include <type_traits>
