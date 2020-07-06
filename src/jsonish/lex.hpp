@@ -1,6 +1,8 @@
 #ifndef JSH_LEX_HPP_INCLUDED
 #define JSH_LEX_HPP_INCLUDED
 
+#include "jsonish/source_position.hpp"
+
 #include <cassert>
 #include <optional>
 #include <string>
@@ -23,15 +25,6 @@ enum struct TokenType
 
 	comma, ///< A comma, ','.
 	colon ///< A colon, ':'.
-};
-
-struct SourcePosition
-{
-	/// The sequence of characters in a source unit.
-	std::string_view chars;
-
-	/// The index of the current character.
-	std::size_t offset;
 };
 
 class Token
