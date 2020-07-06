@@ -51,7 +51,8 @@ public:
 
 	/// Get the value at the given index.
 	[[nodiscard]]
-	Value const& at(std::size_t index) const { return values_.at(index); }
+	auto at(std::size_t index) const
+		-> std::optional<std::reference_wrapper<Value const>>;
 
 	[[nodiscard]] friend
 	bool operator==(List const& a, List const& b);
@@ -195,6 +196,18 @@ bool operator==(Object const& a, Object const& b)
 bool operator!=(Object const& a, Object const& b)
 {
 	return !(a == b);
+}
+
+/// Get the value at the given index.
+[[nodiscard]] inline
+auto List::at(std::size_t index) const
+	-> std::optional<std::reference_wrapper<Value const>>
+{
+	if (index >= values_.size())
+	{
+		return std::nullopt;
+	}
+	return values_[index];
 }
 } // namespace jsonish
 
