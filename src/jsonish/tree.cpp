@@ -3,14 +3,13 @@
 namespace jsonish
 {
 [[nodiscard]]
-auto List::at(std::size_t index) const noexcept
-	-> std::optional<std::reference_wrapper<Value const>>
+auto List::at(std::size_t index) const noexcept -> MaybeValueReference
 {
 	if (index >= values_.size())
 	{
-		return std::nullopt;
+		return MaybeValueReference::empty();
 	}
-	return values_[index];
+	return MaybeValueReference::value(values_[index]);
 }
 
 bool Object::try_insert(std::string key, Value const& value)
@@ -34,15 +33,34 @@ void Object::set_value(std::string key, Value&& value)
 }
 
 [[nodiscard]]
-auto Object::get_value(std::string_view key) const noexcept
-	-> std::optional<std::reference_wrapper<Value const>>
+auto Object::get_value(std::string_view key) const noexcept -> MaybeValueReference
 {
 	auto const value_pos = values_.find(key);
 	if (value_pos == std::cend(values_))
 	{
-		return std::nullopt;
+		return MaybeValueReference::empty();
 	}
-	return value_pos->second;
+	return MaybeValueReference::value(value_pos->second);
+}
+
+[[nodiscard]]
+auto Value::get_value(std::string_view key) const noexcept -> MaybeValueReference
+{
+	if (!is_object())
+	{
+		return MaybeValueReference::empty();
+	}
+	return get_object().get_value(key);
+}
+
+[[nodiscard]]
+auto Value::at(std::size_t index) const noexcept -> MaybeValueReference
+{
+	if (!is_list())
+	{
+		return MaybeValueReference::empty();
+	}
+	return get_list().at(index);
 }
 
 [[nodiscard]]
@@ -65,6 +83,18 @@ bool operator==(Object const& a, Object const& b)
 
 [[nodiscard]]
 bool operator!=(Object const& a, Object const& b)
+{
+	return !(a == b);
+}
+
+[[nodiscard]]
+bool operator==(Value const& a, Value const& b)
+{
+	return a.value_ == b.value_;
+}
+
+[[nodiscard]]
+bool operator!=(Value const& a, Value const& b)
 {
 	return !(a == b);
 }

@@ -15,21 +15,21 @@ TEST_CASE("Parse jsonish", "[parse]")
 	auto r1 = jsonish::parse("{}");
 	REQUIRE(r1.is_valid());
 	auto v1 = std::move(r1).value();
-	REQUIRE(std::holds_alternative<jsonish::Object>(v1));
-	REQUIRE(std::get<jsonish::Object>(v1).is_empty());
+	REQUIRE(v1.is_object());
+	REQUIRE(v1.get_object().is_empty());
 
 	auto r2 = jsonish::parse(R"(["one", "two", "three"])");
 	REQUIRE(r2.is_valid());
 	auto v2 = std::move(r2).value();
-	REQUIRE(std::holds_alternative<jsonish::List>(v2));
-	REQUIRE(std::get<jsonish::List>(v2).size() == 3);
+	REQUIRE(v2.is_list());
+	REQUIRE(v2.get_list().size() == 3);
 	{
 		jsonish::List l;
 		l.append("one");
 		l.append("two");
 		l.append("three");
 
-		REQUIRE(std::get<jsonish::List>(v2) == l);
+		REQUIRE(v2.get_list() == l);
 	}
 
 	auto r3 = jsonish::parse("{");
@@ -50,13 +50,13 @@ TEST_CASE("Parse jsonish", "[parse]")
 	auto r8 = jsonish::parse(R"(   { "a thing\r\n" : {} , "" : "" }   )");
 	REQUIRE(r8.is_valid());
 	auto v8 = r8.value();
-	REQUIRE(std::holds_alternative<jsonish::Object>(v8));
-	REQUIRE(std::get<jsonish::Object>(v8).size() == 2);
+	REQUIRE(v8.is_object());
+	REQUIRE(v8.get_object().size() == 2);
 	{
 		jsonish::Object o;
 		o.set_value("a thing\r\n", jsonish::Object{});
 		o.set_value("", "");
-		REQUIRE(std::get<jsonish::Object>(v8) == o);
+		REQUIRE(v8.get_object() == o);
 	}
 
 	auto r9 = jsonish::parse(R"( { "key" : "value", "key" : "other" } )");
@@ -65,20 +65,20 @@ TEST_CASE("Parse jsonish", "[parse]")
 	auto r10 = jsonish::parse(R"( { "key" : "value", "2key" : "other" } )");
 	REQUIRE(r10.is_valid());
 	auto v10 = r10.value();
-	REQUIRE(std::holds_alternative<jsonish::Object>(v10));
-	REQUIRE(std::get<jsonish::Object>(v10).size() == 2);
+	REQUIRE(v10.is_object());
+	REQUIRE(v10.get_object().size() == 2);
 	{
 		jsonish::Object o;
 		o.set_value("key", "value");
 		o.set_value("2key", "other");
-		REQUIRE(std::get<jsonish::Object>(v10) == o);
+		REQUIRE(v10.get_object() == o);
 	}
 
 	auto r11 = jsonish::parse(R"([{"key" : {}}, ["one", "two", {}], "key", {"key" : []}])");
 	REQUIRE(r11.is_valid());
 	auto v11 = r11.value();
-	REQUIRE(std::holds_alternative<jsonish::List>(v11));
-	REQUIRE(std::get<jsonish::List>(v11).size() == 4);
+	REQUIRE(v11.is_list());
+	REQUIRE(v11.get_list().size() == 4);
 	{
 		jsonish::List l;
 		jsonish::Object l0;
@@ -93,6 +93,32 @@ TEST_CASE("Parse jsonish", "[parse]")
 		jsonish::Object l3;
 		l3.set_value("key", jsonish::List{});
 		l.append(std::move(l3));
-		REQUIRE(std::get<jsonish::List>(v11) == l);
+		REQUIRE(v11.get_list() == l);
+	}
+	// Make sure at and get_value also do their jobs correctly.
+	{
+		auto d0 = v11.at(0).get_value("key");
+		REQUIRE(d0.exists());
+		REQUIRE(d0.value().is_object());
+		REQUIRE(d0.value().get_object() == jsonish::Object{});
+
+		auto d1 = v11.at(2);
+		REQUIRE(d1.exists());
+		REQUIRE(d1.value().is_string());
+		REQUIRE(d1.value().get_string() == "key");
+
+		auto d2 = v11.at(1).at(1);
+		REQUIRE(d2.exists());
+		REQUIRE(d2.value().is_string());
+		REQUIRE(d2.value().get_string() == "two");
+
+		auto d3 = v11.at(3).get_value("key");
+		REQUIRE(d3.exists());
+		REQUIRE(d3.value().is_list());
+		REQUIRE(d3.value().get_list() == jsonish::List());
+
+		REQUIRE(!v11.at(4).exists());
+		REQUIRE(!v11.get_value("dummy").exists());
+		REQUIRE(!v11.at(1).at(2).get_value("thing").exists());
 	}
 }
