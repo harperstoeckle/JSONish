@@ -13,9 +13,8 @@ namespace jsonish
 {
 class Object;
 class List;
-
-/// Contains either a string, an object, or a list.
-using Value = std::variant<std::string, Object, List>;
+class Value;
+class MaybeValueReference;
 
 /// Contains a sequence of jsonish values.
 class List
@@ -49,9 +48,13 @@ public:
 	[[nodiscard]]
 	bool is_empty(void) const noexcept { return values_.empty(); }
 
-	/// Get the value at the given index.
+	/** Attempt to get the value at the given index.
+	 *
+	 * If the index does not exist, return an empty optional. Otherwise,
+	 * return a `std::reference_wrapper` to the specified value.
+	 */
 	[[nodiscard]]
-	Value const& at(std::size_t index) const { return values_.at(index); }
+	auto at(std::size_t index) const noexcept -> MaybeValueReference;
 
 	[[nodiscard]] friend
 	bool operator==(List const& a, List const& b);
@@ -101,14 +104,8 @@ public:
 	 * @return `true` if the key and value were inserted and `false`
 	 * otherwise.
 	 */
-	bool try_insert(std::string key, Value const& value)
-	{
-		return values_.emplace(std::move(key), value).second;
-	}
-	bool try_insert(std::string key, Value&& value)
-	{
-		return values_.emplace(std::move(key), std::move(value)).second;
-	}
+	bool try_insert(std::string key, Value const& value);
+	bool try_insert(std::string key, Value&& value);
 
 	/** Unconditionally set a key and value.
 	 *
@@ -116,14 +113,8 @@ public:
 	 * key does not exist, a new key-value pair is created with `key` and
 	 * `value`.
 	 */
-	void set_value(std::string key, Value const& value)
-	{
-		values_.insert_or_assign(std::move(key), value);
-	}
-	void set_value(std::string key, Value&& value)
-	{
-		values_.insert_or_assign(std::move(key), std::move(value));
-	}
+	void set_value(std::string key, Value const& value);
+	void set_value(std::string key, Value&& value);
 
 	/** Attempt to get the value associated with a key.
 	 *
@@ -132,16 +123,7 @@ public:
 	 * `std::reference_wrapper` referencing the associated value.
 	 */
 	[[nodiscard]]
-	auto get_value(std::string_view key) const noexcept
-		-> std::optional<std::reference_wrapper<Value const>>
-	{
-		auto const value_pos = values_.find(key);
-		if (value_pos == std::cend(values_))
-		{
-			return std::nullopt;
-		}
-		return value_pos->second;
-	}
+	auto get_value(std::string_view key) const noexcept -> MaybeValueReference;
 
 	[[nodiscard]] friend
 	bool operator==(Object const& a, Object const& b);
@@ -173,29 +155,181 @@ private:
 	std::map<std::string, Value, StringViewComparator> values_;
 };
 
-[[nodiscard]] inline
-bool operator==(List const& a, List const& b)
+/// Holds either an `Object`, `std::string`, or `List`.
+class Value
 {
-	return a.values_ == b.values_;
-}
+public:
+	Value(std::string str) : value_(std::move(str)) {}
+	Value(List list) : value_(std::move(list)) {}
+	Value(Object object) : value_(std::move(object)) {}
 
-[[nodiscard]] inline
-bool operator!=(List const& a, List const& b)
-{
-	return !(a == b);
-}
+	/** Construct a string value.
+	 *
+	 * This is required to allow values to be constructed using string
+	 * literals.
+	 */
+	Value(char const* str) : value_(str) {}
 
-[[nodiscard]] inline
-bool operator==(Object const& a, Object const& b)
-{
-	return a.values_ == b.values_;
-}
+	/// Indicate whether this value is a string.
+	[[nodiscard]]
+	bool is_string(void) const noexcept
+	{
+		return std::holds_alternative<std::string>(value_);
+	}
 
-[[nodiscard]] inline
-bool operator!=(Object const& a, Object const& b)
+	/// Indicate whether this value is an object.
+	[[nodiscard]]
+	bool is_object(void) const noexcept
+	{
+		return std::holds_alternative<Object>(value_);
+	}
+
+	/// Indicate whether this value is a list.
+	[[nodiscard]]
+	bool is_list(void) const noexcept
+	{
+		return std::holds_alternative<List>(value_);
+	}
+
+	/** Get a reference to the contained string value.
+	 *
+	 * If the contained value is not a string, throw
+	 * `std::bad_variant_access`.
+	 */
+	[[nodiscard]]
+	auto get_string(void) const -> std::string const&
+	{
+		return std::get<std::string>(value_);
+	}
+
+	/** Get a reference to the contained object value.
+	 *
+	 * If the contained value is not an object, throw
+	 * `std::bad_variant_access`
+	 */
+	[[nodiscard]]
+	auto get_object(void) const -> Object const&
+	{
+		return std::get<Object>(value_);
+	}
+
+	/** Get a reference to the contained list value.
+	 *
+	 * If the contained value is not a list, throw
+	 * `std::bad_variant_access`
+	 */
+	[[nodiscard]]
+	auto get_list(void) const -> List const&
+	{
+		return std::get<List>(value_);
+	}
+
+	/** Attempt to get a value with the specified key in an object.
+	 *
+	 * If this value is not an object, or if the key does not exist,
+	 * produce an empty `MaybeValueReference`. Otherwise, produce a
+	 * `MaybeValueReference` containing a reference to that value.
+	 */
+	[[nodiscard]]
+	auto get_value(std::string_view key) const noexcept -> MaybeValueReference;
+
+	/** Attempt to get a value with the specified index in a list.
+	 *
+	 * If the value is not a list, or if the index does not exist,
+	 * produce an empty `MaybeValueReference`. Otherwise, produce a
+	 * `MaybeValueReference` containing a reference to that value.
+	 */
+	[[nodiscard]]
+	auto at(std::size_t index) const noexcept -> MaybeValueReference;
+
+	[[nodiscard]] friend
+	bool operator==(Value const& a, Value const& b);
+
+	[[nodiscard]] friend
+	bool operator!=(Value const& a, Value const& b);
+
+private:
+	std::variant<std::string, Object, List> value_;
+};
+
+/// Wraps an optional const reference to a `Value`.
+class MaybeValueReference
 {
-	return !(a == b);
-}
+public:
+	/// Create an empty `MaybeValueReference`.
+	[[nodiscard]] static
+	auto empty(void) noexcept -> MaybeValueReference
+	{
+		return MaybeValueReference();
+	}
+
+	/// Create a `MaybeValueReference` referencing the given value.
+	[[nodiscard]] static
+	auto value(Value const& value) noexcept -> MaybeValueReference
+	{
+		return MaybeValueReference(value);
+	}
+
+	/// Indicate whether this value exists.
+	[[nodiscard]]
+	bool exists(void) const noexcept
+	{
+		return maybe_value_.has_value();
+	}
+
+	/** Get a reference to the contained value.
+	 *
+	 * If the value does not exist, throw `std::bad_optional_access`.
+	 */
+	[[nodiscard]]
+	auto value(void) const noexcept -> Value const&
+	{
+		return maybe_value_.value();
+	}
+
+	/** Attempt to get the value associated with a key in an object.
+	 *
+	 * If no reference is contained, return an empty `MaybeValueReference`.
+	 * Otherwise, produce the result of calling `get_value` on the
+	 * contained reference.
+	 */
+	[[nodiscard]]
+	auto get_value(std::string_view key) const noexcept -> MaybeValueReference
+	{
+		if (!exists())
+		{
+			return MaybeValueReference::empty();
+		}
+		return maybe_value_->get().get_value(key);
+	}
+
+	/** Attempt to get the value associated with an index in a list.
+	 *
+	 * If no reference is contained, return an empty `MaybeValueReference`.
+	 * Otherwise, produce the result of calling `at` on the contained
+	 * reference.
+	 */
+	[[nodiscard]]
+	auto at(std::size_t index) const noexcept -> MaybeValueReference
+	{
+		if (!exists())
+		{
+			return MaybeValueReference::empty();
+		}
+		return maybe_value_->get().at(index);
+	}
+
+private:
+	// Construct empty MaybeValueReference
+	explicit
+	MaybeValueReference(void) : maybe_value_(std::nullopt) {}
+
+	// Construct MaybeValueReference with a reference.
+	explicit
+	MaybeValueReference(Value const& value) : maybe_value_(value) {}
+
+	std::optional<std::reference_wrapper<Value const>> maybe_value_;
+};
 } // namespace jsonish
 
 #endif

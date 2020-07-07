@@ -1,6 +1,6 @@
 add_library(jsonish
 	jsonish/lex.cpp jsonish/lex.hpp
-	${JSONISH_INCLUDE_DIR}/jsonish/tree.hpp
+	jsonish/tree.cpp ${JSONISH_INCLUDE_DIR}/jsonish/tree.hpp
 	${JSONISH_INCLUDE_DIR}/jsonish/result.hpp
 	${JSONISH_INCLUDE_DIR}/jsonish/source_position.hpp
 	jsonish/parse.cpp ${JSONISH_INCLUDE_DIR}/jsonish/parse.hpp)
