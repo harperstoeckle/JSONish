@@ -5,7 +5,6 @@ project(jsonish
 	DESCRIPTION "Parser for jsonish"
 	LANGUAGES CXX)
 
-set(JSONISH_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 set(JSONISH_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
 
 add_subdirectory(src)

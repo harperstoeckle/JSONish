@@ -17,7 +17,7 @@ target_include_directories(jsonish
 	PUBLIC
 	${JSONISH_INCLUDE_DIR}
 	PRIVATE
-	${JSONISH_SRC_DIR})
+	${PROJECT_SOURCE_DIR}/src)
 
 option(JSONISH_ENABLE_WARNINGS "Enable maximal warnings for jsonish" ON)
 if (JSONISH_ENABLE_WARNINGS)

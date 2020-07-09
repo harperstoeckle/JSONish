@@ -9,7 +9,7 @@ target_link_libraries(jsonish-tests
 
 target_include_directories(jsonish-tests
 	PRIVATE
-	${JSONISH_SRC_DIR})
+	${PROJECT_SOURCE_DIR}/src)
 
 find_package(Catch2)
 target_link_libraries(jsonish-tests
