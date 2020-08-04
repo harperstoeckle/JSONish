@@ -56,10 +56,10 @@ public:
 	[[nodiscard]]
 	auto at(std::size_t index) const noexcept -> MaybeValueReference;
 
-	[[nodiscard]] friend
+	friend
 	bool operator==(List const& a, List const& b);
 
-	[[nodiscard]] friend
+	friend
 	bool operator!=(List const& a, List const& b);
 
 private:
@@ -125,10 +125,10 @@ public:
 	[[nodiscard]]
 	auto get_value(std::string_view key) const noexcept -> MaybeValueReference;
 
-	[[nodiscard]] friend
+	friend
 	bool operator==(Object const& a, Object const& b);
 
-	[[nodiscard]] friend
+	friend
 	bool operator!=(Object const& a, Object const& b);
 
 private:
@@ -242,10 +242,10 @@ public:
 	[[nodiscard]]
 	auto at(std::size_t index) const noexcept -> MaybeValueReference;
 
-	[[nodiscard]] friend
+	friend
 	bool operator==(Value const& a, Value const& b);
 
-	[[nodiscard]] friend
+	friend
 	bool operator!=(Value const& a, Value const& b);
 
 private:
