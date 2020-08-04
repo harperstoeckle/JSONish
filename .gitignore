@@ -1,3 +1,4 @@
-build
+/build/
 Session.vim
-tags
+/tags
+/.clangd/
