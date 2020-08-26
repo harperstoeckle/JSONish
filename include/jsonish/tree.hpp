@@ -99,7 +99,8 @@ public:
 
 	/** Attempt to insert a key-value pair into the object.
 	 *
-	 * If a value with the given key already exists in this object,
+	 * If a value with the given key already exists in this object, it is
+	 * not changed.
 	 *
 	 * @return `true` if the key and value were inserted and `false`
 	 * otherwise.
