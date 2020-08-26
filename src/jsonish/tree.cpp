@@ -50,7 +50,7 @@ auto Value::get_value(std::string_view key) const noexcept -> MaybeValueReferenc
 	{
 		return MaybeValueReference::empty();
 	}
-	return get_object().get_value(key);
+	return as_object().get_value(key);
 }
 
 [[nodiscard]]
@@ -60,7 +60,7 @@ auto Value::at(std::size_t index) const noexcept -> MaybeValueReference
 	{
 		return MaybeValueReference::empty();
 	}
-	return get_list().at(index);
+	return as_list().at(index);
 }
 
 [[nodiscard]]

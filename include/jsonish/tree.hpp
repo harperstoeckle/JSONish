@@ -197,7 +197,7 @@ public:
 	 * `std::bad_variant_access`.
 	 */
 	[[nodiscard]]
-	auto get_string(void) const -> std::string const&
+	auto as_string(void) const -> std::string const&
 	{
 		return std::get<std::string>(value_);
 	}
@@ -208,7 +208,7 @@ public:
 	 * `std::bad_variant_access`
 	 */
 	[[nodiscard]]
-	auto get_object(void) const -> Object const&
+	auto as_object(void) const -> Object const&
 	{
 		return std::get<Object>(value_);
 	}
@@ -219,7 +219,7 @@ public:
 	 * `std::bad_variant_access`
 	 */
 	[[nodiscard]]
-	auto get_list(void) const -> List const&
+	auto as_list(void) const -> List const&
 	{
 		return std::get<List>(value_);
 	}
