@@ -54,8 +54,8 @@ TEST_CASE("Parse jsonish", "[parse]")
 	REQUIRE(v8.as_object().size() == 2);
 	{
 		jsonish::Object o;
-		o.set_value("a thing\r\n", jsonish::Object{});
-		o.set_value("", "");
+		o.set_property("a thing\r\n", jsonish::Object{});
+		o.set_property("", "");
 		REQUIRE(v8.as_object() == o);
 	}
 
@@ -69,8 +69,8 @@ TEST_CASE("Parse jsonish", "[parse]")
 	REQUIRE(v10.as_object().size() == 2);
 	{
 		jsonish::Object o;
-		o.set_value("key", "value");
-		o.set_value("2key", "other");
+		o.set_property("key", "value");
+		o.set_property("2key", "other");
 		REQUIRE(v10.as_object() == o);
 	}
 
@@ -82,7 +82,7 @@ TEST_CASE("Parse jsonish", "[parse]")
 	{
 		jsonish::List l;
 		jsonish::Object l0;
-		l0.set_value("key", jsonish::Object{});
+		l0.set_property("key", jsonish::Object{});
 		l.append(std::move(l0));
 		jsonish::List l1;
 		l1.append("one");
@@ -91,13 +91,13 @@ TEST_CASE("Parse jsonish", "[parse]")
 		l.append(std::move(l1));
 		l.append("key");
 		jsonish::Object l3;
-		l3.set_value("key", jsonish::List{});
+		l3.set_property("key", jsonish::List{});
 		l.append(std::move(l3));
 		REQUIRE(v11.as_list() == l);
 	}
-	// Make sure at and get_value also do their jobs correctly.
+	// Make sure at and property also do their jobs correctly.
 	{
-		auto d0 = v11.at(0).get_value("key");
+		auto d0 = v11.at(0).property("key");
 		REQUIRE(d0.exists());
 		REQUIRE(d0.value().is_object());
 		REQUIRE(d0.value().as_object() == jsonish::Object{});
@@ -112,13 +112,13 @@ TEST_CASE("Parse jsonish", "[parse]")
 		REQUIRE(d2.value().is_string());
 		REQUIRE(d2.value().as_string() == "two");
 
-		auto d3 = v11.at(3).get_value("key");
+		auto d3 = v11.at(3).property("key");
 		REQUIRE(d3.exists());
 		REQUIRE(d3.value().is_list());
 		REQUIRE(d3.value().as_list() == jsonish::List());
 
 		REQUIRE(!v11.at(4).exists());
-		REQUIRE(!v11.get_value("dummy").exists());
-		REQUIRE(!v11.at(1).at(2).get_value("thing").exists());
+		REQUIRE(!v11.property("dummy").exists());
+		REQUIRE(!v11.at(1).at(2).property("thing").exists());
 	}
 }

@@ -22,18 +22,18 @@ bool Object::try_insert(std::string key, Value&& value)
 	return values_.emplace(std::move(key), std::move(value)).second;
 }
 
-void Object::set_value(std::string key, Value const& value)
+void Object::set_property(std::string key, Value const& value)
 {
 	values_.insert_or_assign(std::move(key), value);
 }
 
-void Object::set_value(std::string key, Value&& value)
+void Object::set_property(std::string key, Value&& value)
 {
 	values_.insert_or_assign(std::move(key), std::move(value));
 }
 
 [[nodiscard]]
-auto Object::get_value(std::string_view key) const noexcept -> MaybeValueReference
+auto Object::property(std::string_view key) const noexcept -> MaybeValueReference
 {
 	auto const value_pos = values_.find(key);
 	if (value_pos == std::cend(values_))
@@ -44,13 +44,13 @@ auto Object::get_value(std::string_view key) const noexcept -> MaybeValueReferen
 }
 
 [[nodiscard]]
-auto Value::get_value(std::string_view key) const noexcept -> MaybeValueReference
+auto Value::property(std::string_view key) const noexcept -> MaybeValueReference
 {
 	if (!is_object())
 	{
 		return MaybeValueReference::empty();
 	}
-	return as_object().get_value(key);
+	return as_object().property(key);
 }
 
 [[nodiscard]]

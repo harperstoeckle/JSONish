@@ -113,8 +113,8 @@ public:
 	 * key does not exist, a new key-value pair is created with `key` and
 	 * `value`.
 	 */
-	void set_value(std::string key, Value const& value);
-	void set_value(std::string key, Value&& value);
+	void set_property(std::string key, Value const& value);
+	void set_property(std::string key, Value&& value);
 
 	/** Attempt to get the value associated with a key.
 	 *
@@ -123,7 +123,7 @@ public:
 	 * `std::reference_wrapper` referencing the associated value.
 	 */
 	[[nodiscard]]
-	auto get_value(std::string_view key) const noexcept -> MaybeValueReference;
+	auto property(std::string_view key) const noexcept -> MaybeValueReference;
 
 	friend
 	bool operator==(Object const& a, Object const& b);
@@ -231,7 +231,7 @@ public:
 	 * `MaybeValueReference` containing a reference to that value.
 	 */
 	[[nodiscard]]
-	auto get_value(std::string_view key) const noexcept -> MaybeValueReference;
+	auto property(std::string_view key) const noexcept -> MaybeValueReference;
 
 	/** Attempt to get a value with the specified index in a list.
 	 *
@@ -290,17 +290,17 @@ public:
 	/** Attempt to get the value associated with a key in an object.
 	 *
 	 * If no reference is contained, return an empty `MaybeValueReference`.
-	 * Otherwise, produce the result of calling `get_value` on the
+	 * Otherwise, produce the result of calling `property` on the
 	 * contained reference.
 	 */
 	[[nodiscard]]
-	auto get_value(std::string_view key) const noexcept -> MaybeValueReference
+	auto property(std::string_view key) const noexcept -> MaybeValueReference
 	{
 		if (!exists())
 		{
 			return MaybeValueReference::empty();
 		}
-		return maybe_value_->get().get_value(key);
+		return maybe_value_->get().property(key);
 	}
 
 	/** Attempt to get the value associated with an index in a list.

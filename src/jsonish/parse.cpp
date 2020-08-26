@@ -128,7 +128,7 @@ Result<Object> parse_object(Lexer& lex)
 	}
 
 	auto [first_key, first_value] = std::move(first_entry).value();
-	values.set_value(std::move(first_key), std::move(first_value));
+	values.set_property(std::move(first_key), std::move(first_value));
 
 	while (lex.try_extract_token(TokenType::comma))
 	{
