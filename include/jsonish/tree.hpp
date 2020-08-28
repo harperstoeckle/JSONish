@@ -341,6 +341,39 @@ public:
 		return exists() && as_value().is_list();
 	}
 
+	/** Get a contained string value.
+	 *
+	 * If the value does not exist, throw `std::bad_optional_access`. If it
+	 * does exist but is not a string, throw `std::bad_variant_access`.
+	 */
+	[[nodiscard]]
+	auto as_string(void) const -> std::string const&
+	{
+		return as_value().as_string();
+	}
+
+	/** Get a contained object value.
+	 *
+	 * If the value does not exist, throw `std::bad_optional_access`. If it
+	 * does exist but is not a object, throw `std::bad_variant_access`.
+	 */
+	[[nodiscard]]
+	auto as_object(void) const -> Object const&
+	{
+		return as_value().as_object();
+	}
+
+	/** Get a contained list value.
+	 *
+	 * If the value does not exist, throw `std::bad_optional_access`. If it
+	 * does exist but is not a list, throw `std::bad_variant_access`.
+	 */
+	[[nodiscard]]
+	auto as_list(void) const -> List const&
+	{
+		return as_value().as_list();
+	}
+
 private:
 	// Construct empty MaybeValueReference
 	explicit

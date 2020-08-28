@@ -102,24 +102,28 @@ TEST_CASE("Parse jsonish", "[parse]")
 		REQUIRE(d0.is_object());
 		REQUIRE(d0.as_value().is_object());
 		REQUIRE(d0.as_value().as_object() == jsonish::Object{});
+		REQUIRE(d0.as_object() == jsonish::Object{});
 
 		auto d1 = v11.at(2);
 		REQUIRE(d1.exists());
 		REQUIRE(d1.is_string());
 		REQUIRE(d1.as_value().is_string());
 		REQUIRE(d1.as_value().as_string() == "key");
+		REQUIRE(d1.as_string() == "key");
 
 		auto d2 = v11.at(1).at(1);
 		REQUIRE(d2.exists());
 		REQUIRE(d2.is_string());
 		REQUIRE(d2.as_value().is_string());
 		REQUIRE(d2.as_value().as_string() == "two");
+		REQUIRE(d2.as_string() == "two");
 
 		auto d3 = v11.at(3).property("key");
 		REQUIRE(d3.exists());
 		REQUIRE(d3.is_list());
 		REQUIRE(d3.as_value().is_list());
 		REQUIRE(d3.as_value().as_list() == jsonish::List());
+		REQUIRE(d3.as_list() == jsonish::List());
 
 		REQUIRE(!v11.at(4).exists());
 		REQUIRE(!v11.property("dummy").exists());
