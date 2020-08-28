@@ -322,21 +322,21 @@ public:
 
 	/// Indicate whether the value exists and is a string.
 	[[nodiscard]]
-	bool is_string(void)
+	bool is_string(void) const noexcept
 	{
 		return exists() && as_value().is_string();
 	}
 
 	/// Indicate whether the value exists and is a object.
 	[[nodiscard]]
-	bool is_object(void)
+	bool is_object(void) const noexcept
 	{
 		return exists() && as_value().is_object();
 	}
 
 	/// Indicate whether the value exists and is a list.
 	[[nodiscard]]
-	bool is_list(void)
+	bool is_list(void) const noexcept
 	{
 		return exists() && as_value().is_list();
 	}
