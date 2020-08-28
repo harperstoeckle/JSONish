@@ -283,7 +283,7 @@ public:
 	 * If the value does not exist, throw `std::bad_optional_access`.
 	 */
 	[[nodiscard]]
-	auto value(void) const noexcept -> Value const&
+	auto as_value(void) const noexcept -> Value const&
 	{
 		return maybe_value_.value();
 	}
