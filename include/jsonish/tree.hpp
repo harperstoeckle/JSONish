@@ -320,6 +320,27 @@ public:
 		return maybe_value_->get().at(index);
 	}
 
+	/// Indicate whether the value exists and is a string.
+	[[nodiscard]]
+	bool is_string(void)
+	{
+		return exists() && as_value().is_string();
+	}
+
+	/// Indicate whether the value exists and is a object.
+	[[nodiscard]]
+	bool is_object(void)
+	{
+		return exists() && as_value().is_object();
+	}
+
+	/// Indicate whether the value exists and is a list.
+	[[nodiscard]]
+	bool is_list(void)
+	{
+		return exists() && as_value().is_list();
+	}
+
 private:
 	// Construct empty MaybeValueReference
 	explicit
